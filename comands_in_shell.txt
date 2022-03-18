@@ -1,0 +1,42 @@
+from news.models import *
+u1 = User.objects.create_user(username='Kseniya')
+u3 = User.objects.create_user(username='Oleg')
+u2 = User.objects.create_user(username='Elena')
+Author.objects.create(authorUser=u1)
+
+Category.objects.create(name='IT')
+Category.objects.create(name='Social life')
+Category.objects.create(name='Economy')
+Category.objects.create(name='Health')
+
+Post.objects.create(author=Author.objects.get(authorUser=User.objects.get(username='Kseniya')), categoryType='NW', title='First new', text='text about healthy life')
+Post.objects.create(author=Author.objects.get(authorUser=User.objects.get(username='Kseniya')), categoryType='NW', title='Second new', text='text about IT technologies')
+Post.objects.create(author=Author.objects.get(authorUser=User.objects.get(username='Kseniya')), categoryType='NW', title='Third new', text='text about economical situation in contry')
+
+post1 = Post.objects.get(pk=1)
+post2 = Post.objects.get(pk=2)
+post3 = Post.objects.get(pk=3)
+
+c1=Category.objects.get(name='Health')
+c2=Category.objects.get(name='IT')
+c3=Category.objects.get(name='Economy')
+c3=Category.objects.get(name='Social life')
+
+p1=Post.objects.get(pk=1)
+p2=Post.objects.get(pk=2)
+p3=Post.objects.get(pk=3)
+
+p1.postCategory.add(c1)
+p2.postCategory.add(c2)
+p3.postCategory.add(c3)
+
+Comment.objects.create(commentUser=User.objects.get(username='Kseniya'),commentPost=Post.objects.get(pk=1), text='very intresting article!')
+Comment.objects.create(commentUser=User.objects.get(username='Elena'),commentPost=Post.objects.get(pk=2), text='very good!')
+Comment.objects.create(commentUser=User.objects.get(username='Oleg'),commentPost=Post.objects.get(pk=3), text='It is awful!')
+
+Post.objects.get(pk=1).like()
+Post.objects.get(pk=2).like()
+Post.objects.get(pk=3).dislike()
+
+Author.objects.get(authorUser=User.objects.get(username='Kseniya')).update_rating()
+Author.objects.get(authorUser=User.objects.get(username='Kseniya')).ratingAuthor
