@@ -1,0 +1,18 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+
+{% block title %}
+News - {{ author.authorUser }}
+{% endblock title %}
+{% block h1 %}Страница автора {{ author.authorUser }}{% endblock h1 %}
+{% block content %}
+<article>
+    <header class="mb-4"> </header>
+        <h1 class="fw-bolder mb-1">{{ author.authorUser }}</h1>
+        <div class="text-muted fst-italic mb-2">Рейтинг: {{ author.ratingAuthor }}</div>
+        <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{ author.ratingAuthor }}</a>
+</article>
+
+
+{% endblock content %}

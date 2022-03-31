@@ -31,9 +31,9 @@ News
     {% for news in filter.qs %}
         <tr>
             <td>
-            <a href="{% url 'post' post.id %}">news.title</a>
-            <a href="{% url 'edit' news_update.id %}"><u>Редактировать</u></a>
-            <a href="{% url 'delete' news_delete.id %}"><u> Удалить </u></a>
+            <a href="{% url 'news_create' news.id %}">Добавить новость</a>
+            <a href="{% url 'news_edit' news.id %}"><u>Редактировать</u></a>
+            <a href="{% url 'news_delete' news.id %}"><u> Удалить </u></a>
             </td>
             <td>
                 {{ news.title|censor }}
@@ -50,7 +50,7 @@ News
         </tr>
     {% endfor %}
     </table>
-<a href="{%url 'news_create'%}">Добавить новость</a><br>
+
 {% if is_paginated %}
 
     <!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->

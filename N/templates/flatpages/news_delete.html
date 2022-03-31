@@ -1,10 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'flatpages/default.html' %}
+
+{% block title %} News {% endblock title %}
+
+{% block content %}
+<h2>Вы действительно хотите удалить новость?</h2>
+    <table>
+        <tr>
+            <td>
+                Заголовок
+            </td>
+            <td>
+                Дата публикации
+            </td>
+            <td>
+                Категория
+            </td>
+            <td>
+                Текст
+            </td>
+         </tr>
+        <tr>
+            <td>
+            <a href="{% url 'post' post.id %}">{{ Post.name|title }}</a>
+            </td>
+            <td>
+                {{ news.title|truncatechars:50 }}
+            </td>
+            <td>
+                {{ news.dateCreation|date:'d-M-Y H:m' }}
+            </td>
+            <td>
+                {{ news.categoryType }}
+            </td>
+            <td>
+                {{ news.text|truncatechars:100 }}
+            </td>
+        </tr>
+
+    </table>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="подтвердить"></form>
+{% endblock content %}

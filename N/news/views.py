@@ -1,10 +1,13 @@
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
-from .models import Post
+from .models import Post, Author
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from datetime import datetime
 from django.core.paginator import Paginator
 from .filters import PostFilter
-from .forms import PostForm
+from .forms import PostForm, ProfileForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 
 
 class PostList(ListView):
@@ -35,17 +38,18 @@ class PostList(ListView):
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'templates/flatpages/post.html'
+    template_name = 'flatpages/post.html'
     context_object_name = 'post'
     queryset = Post.objects.all()
 
+
 class PostCreateView(CreateView):
-    template_name = 'templates/news_create.html'
+    template_name = 'flatpages/news_create.html'
     form_class = PostForm
 
 
 class PostUpdateView(UpdateView):
-    template_name = 'templates/news_create.html'
+    template_name = 'flatpages/news_create.html'
     form_class = PostForm
 
     def get_object(self, **kwargs):
@@ -54,13 +58,14 @@ class PostUpdateView(UpdateView):
 
 
 class PostDeleteView(DeleteView):
-    template_name = 'templates/news_delete.html'
+    template_name = 'flatpages/news_delete.html'
     queryset = Post.objects.all()
     success_url = '/news/'
 
+
 class Search(ListView):
     model = Post
-    template_name = 'search.html'
+    template_name = 'flatpages/search.html'
     context_object_name = 'search'
 
     def get_filter(self):
@@ -70,5 +75,34 @@ class Search(ListView):
         return self.get_filter().qs
 
     def get_context_data(self, *args, **kwargs):
-        return {**super().get_context_data(*args, **kwargs), 'filter':self.get_filter()}
+        return {**super().get_context_data(*args, **kwargs), 'filter': self.get_filter()}
 
+
+class ProfileView(DetailView):
+    model = User
+    template_name = 'flatpages/profile.html'
+    context_object_name = 'profile'
+
+    def get_object(self, **kwargs):
+        id = self.kwargs.user.id
+        return User.objects.get(pk=id)
+
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = 'flatpages/prof_update.html'
+    form_class = ProfileForm
+    success_url = 'user'
+    queryset = User.objects.all()
+
+    def get_object(self, **kwargs):
+
+        return self.request.user
+
+
+class IndexView(LoginRequiredMixin, TemplateView):
+    template_name = 'index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_premium'] = not self.request.user.groups.filter(name='users').exists()
+        return context
